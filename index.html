@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prompt JSON Maker - AI Image Generation Prompt Builder</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Prompt JSON Maker</h1>
+    </header>
+
+    <div class="main-content">
+      <!-- Input Form Section -->
+      <div class="input-section">
+        <!-- Text Inputs -->
+        <div class="form-section">
+          <h2 class="section-title">Text Prompts</h2>
+          <label for="prompt">Prompt</label>
+          <textarea id="prompt" placeholder="Describe your main subject and scene..."></textarea>
+          
+          <label for="negative_prompt">Negative Prompt</label>
+          <textarea id="negative_prompt" placeholder="What to avoid in the image..."></textarea>
+        </div>
+
+        <!-- Type Selector -->
+        <div class="form-section">
+          <h2 class="section-title">Type</h2>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="type" value="photo" checked>
+              Photo
+            </label>
+            <label>
+              <input type="radio" name="type" value="painting">
+              Painting
+            </label>
+            <label>
+              <input type="radio" name="type" value="drawing">
+              Drawing
+            </label>
+          </div>
+
+          <!-- Photo Settings -->
+          <div id="photo-settings" class="conditional-section active">
+            <div class="form-grid">
+              <div>
+                <label for="photo-device">Device</label>
+                <select id="photo-device">
+                  <option value="">Select device...</option>
+                </select>
+              </div>
+              <div>
+                <label for="photo-lens-type">Lens Type</label>
+                <select id="photo-lens-type">
+                  <option value="">Select lens...</option>
+                </select>
+              </div>
+            </div>
+            <label for="photo-custom">Custom Photo Option</label>
+            <select id="photo-custom">
+              <option value="">Select option...</option>
+            </select>
+          </div>
+
+          <!-- Painting/Drawing Settings -->
+          <div id="painting-settings" class="conditional-section">
+            <div class="form-grid">
+              <div>
+                <label for="painting-style">Style</label>
+                <select id="painting-style">
+                  <option value="">Select style...</option>
+                </select>
+              </div>
+              <div>
+                <label for="painting-colors">Colors</label>
+                <select id="painting-colors">
+                  <option value="">Select colors...</option>
+                </select>
+              </div>
+            </div>
+            <label for="painting-custom">Custom Art Option</label>
+            <select id="painting-custom">
+              <option value="">Select option...</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- View Settings -->
+        <div class="form-section">
+          <h2 class="section-title">View</h2>
+          <div class="form-grid">
+            <div>
+              <label for="view-perspective">Perspective</label>
+              <select id="view-perspective">
+                <option value="">Select perspective...</option>
+              </select>
+            </div>
+            <div>
+              <label for="view-distance">Distance</label>
+              <select id="view-distance">
+                <option value="">Select distance...</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subject Settings -->
+        <div class="form-section">
+          <h2 class="section-title">Subject</h2>
+          <div class="form-grid">
+            <div>
+              <label for="subject-characteristic">Characteristic</label>
+              <select id="subject-characteristic">
+                <option value="">Select characteristic...</option>
+              </select>
+            </div>
+            <div>
+              <label for="subject-clothes">Clothes</label>
+              <select id="subject-clothes">
+                <option value="">Select clothes...</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div>
+              <label for="subject-action">Action</label>
+              <select id="subject-action">
+                <option value="">Select action...</option>
+              </select>
+            </div>
+            <div>
+              <label for="subject-top-type">Top Type</label>
+              <select id="subject-top-type">
+                <option value="">Select top type...</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div>
+              <label for="subject-bottom-type">Bottom Type</label>
+              <select id="subject-bottom-type">
+                <option value="">Select bottom type...</option>
+              </select>
+            </div>
+            <div>
+              <label for="subject-accessories">Accessories</label>
+              <select id="subject-accessories">
+                <option value="">Select accessories...</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div>
+              <label for="subject-weapon">Weapon</label>
+              <select id="subject-weapon">
+                <option value="">Select weapon...</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scene Settings -->
+        <div class="form-section">
+          <h2 class="section-title">Scene</h2>
+          <div class="form-grid">
+            <div>
+              <label for="scene-1">Scene Option 1</label>
+              <select id="scene-1">
+                <option value="">Select scene...</option>
+              </select>
+            </div>
+            <div>
+              <label for="scene-2">Scene Option 2</label>
+              <select id="scene-2">
+                <option value="">Select scene...</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lighting Settings -->
+        <div class="form-section">
+          <h2 class="section-title">Lighting</h2>
+          <div class="form-grid">
+            <div>
+              <label for="lighting-1">Lighting Option 1</label>
+              <select id="lighting-1">
+                <option value="">Select lighting...</option>
+              </select>
+            </div>
+            <div>
+              <label for="lighting-2">Lighting Option 2</label>
+              <select id="lighting-2">
+                <option value="">Select lighting...</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Output Section -->
+      <div class="output-section">
+        <div class="form-section">
+          <h2 class="section-title">JSON Output</h2>
+          <textarea id="json-output" readonly></textarea>
+          
+          <div class="button-group">
+            <button id="copy-btn">Copy JSON</button>
+            <button id="random-btn" class="secondary">Random Selector</button>
+          </div>
+          <div class="button-group">
+            <button id="save-btn" class="secondary">Save</button>
+            <button id="load-btn" class="secondary">Load</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>Prompt JSON Maker - Build structured prompts for AI image generation</p>
+    </footer>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/generator.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
