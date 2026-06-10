@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="version" content="1.0.1">
   <title>Prompt JSON Maker - AI Image Generation Prompt Builder</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -29,18 +30,12 @@
         <div class="form-section">
           <h2 class="section-title">Type</h2>
           <div class="radio-group">
-            <label>
-              <input type="radio" name="type" value="photo" checked>
-              Photo
-            </label>
-            <label>
-              <input type="radio" name="type" value="painting">
-              Painting
-            </label>
-            <label>
-              <input type="radio" name="type" value="drawing">
-              Drawing
-            </label>
+            <input type="radio" name="type" value="photo" id="type-photo" checked>
+            <label for="type-photo">Photo</label>
+            <input type="radio" name="type" value="painting" id="type-painting">
+            <label for="type-painting">Painting</label>
+            <input type="radio" name="type" value="drawing" id="type-drawing">
+            <label for="type-drawing">Drawing</label>
           </div>
 
           <!-- Photo Settings -->
@@ -85,25 +80,6 @@
             <select id="painting-custom">
               <option value="">Select option...</option>
             </select>
-          </div>
-        </div>
-
-        <!-- View Settings -->
-        <div class="form-section">
-          <h2 class="section-title">View</h2>
-          <div class="form-grid">
-            <div>
-              <label for="view-perspective">Perspective</label>
-              <select id="view-perspective">
-                <option value="">Select perspective...</option>
-              </select>
-            </div>
-            <div>
-              <label for="view-distance">Distance</label>
-              <select id="view-distance">
-                <option value="">Select distance...</option>
-              </select>
-            </div>
           </div>
         </div>
 
@@ -162,9 +138,24 @@
           </div>
         </div>
 
-        <!-- Scene Settings -->
+        <!-- View, Scene & Lighting -->
         <div class="form-section">
-          <h2 class="section-title">Scene</h2>
+          <h2 class="section-title">View, Scene & Lighting</h2>
+          <div class="form-grid">
+            <div>
+              <label for="view-perspective">Perspective</label>
+              <select id="view-perspective">
+                <option value="">Select perspective...</option>
+              </select>
+            </div>
+            <div>
+              <label for="view-distance">Distance</label>
+              <select id="view-distance">
+                <option value="">Select distance...</option>
+              </select>
+            </div>
+          </div>
+          <hr class="form-divider">
           <div class="form-grid">
             <div>
               <label for="scene-1">Scene Option 1</label>
@@ -179,11 +170,7 @@
               </select>
             </div>
           </div>
-        </div>
-
-        <!-- Lighting Settings -->
-        <div class="form-section">
-          <h2 class="section-title">Lighting</h2>
+          <hr class="form-divider">
           <div class="form-grid">
             <div>
               <label for="lighting-1">Lighting Option 1</label>

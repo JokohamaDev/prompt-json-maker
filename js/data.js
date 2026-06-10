@@ -2,26 +2,27 @@
 const SELECTOR_OPTIONS = {
   photo: {
     device: [
-      "iPhone 15 Pro",
-      "Canon EOS R5",
-      "Sony A7IV",
-      "Nikon Z8",
-      "Fujifilm X-T5",
-      "Samsung Galaxy S24",
-      "Google Pixel 8 Pro",
-      "Leica Q3",
-      "Hasselblad X2D",
+      "iPhone",
+      "Canon",
+      "Sony",
+      "Nikon",
+      "Fujifilm",
+      "Samsung Galaxy",
+      "Google Pixel",
+      "Leica",
+      "Hasselblad",
+      "Polaroid",
+      "Instant Camera",
       "None"
     ],
     lens_type: [
-      "50mm f/1.8",
-      "85mm f/1.4",
-      "24-70mm f/2.8",
-      "35mm f/1.4",
-      "100mm Macro",
-      "16-35mm f/2.8",
-      "70-200mm f/2.8",
-      "14mm f/2.8",
+      "Fisheye",
+      "24mm",
+      "35mm",
+      "50mm",
+      "85mm",
+      "100mm",
+      "200mm",
       "None"
     ],
     custom: [
@@ -31,6 +32,8 @@ const SELECTOR_OPTIONS = {
       "Time-lapse",
       "Double Exposure",
       "High Speed",
+      "Macro",
+      "Tilt-Shift",
       "None"
     ]
   },
@@ -127,6 +130,13 @@ const SELECTOR_OPTIONS = {
       "Reading",
       "Working",
       "Relaxing",
+      "Sleeping",
+      "Flying",
+      "Swimming",
+      "Driving",
+      "Cooking",
+      "Playing Instrument",
+      "Singing",
       "Interacting"
     ],
     top_type: [
@@ -139,6 +149,12 @@ const SELECTOR_OPTIONS = {
       "Hoodie",
       "Jacket",
       "Coat",
+      "Robe",
+      "Bra",
+      "Bralette",
+      "Bikini Top",
+      "Sports Bra",
+      "Corset",
       "Armor",
       "None"
     ],
@@ -151,6 +167,8 @@ const SELECTOR_OPTIONS = {
       "Leggings",
       "Panties",
       "Underwear",
+      "Bikini Bottom",
+      "Fishnet Stockings",
       "Armor",
       "None"
     ],
@@ -162,27 +180,54 @@ const SELECTOR_OPTIONS = {
       "Watch",
       "Gloves",
       "Belt",
-      "Bag",
+      "Hand Bag",
+      "Backpack",
+      "Shoulder Bag",
       "Headphones",
+      "Mask",
+      "Veil",
+      "Chains",
+      "Choker",
+      "Necklace",
+      "Bracelet",
+      "Ring",
+      "Earrings",
       "None"
     ],
     weapon: [
       "Sword",
+      "Katana",
       "Axe",
       "Gun",
       "Bow",
+      "Crossbow",
       "Staff",
       "Dagger",
       "Spear",
       "Hammer",
       "Magic wand",
+      "Nunchucks",
+      "Bo Staff",
+      "Glaive",
+      "Flail",
       "None"
     ]
   },
   scene: {
     scene_1: [
       "Indoor",
+      "Bedroom",
+      "Living Room",
+      "Kitchen",
+      "Bathroom",
+      "Studio",
+      "Office",
       "Outdoor",
+      "Beach",
+      "Desert",
+      "Forest",
+      "Mountain",
+      "City",
       "Urban",
       "Nature",
       "Fantasy World",
@@ -196,15 +241,14 @@ const SELECTOR_OPTIONS = {
     scene_2: [
       "Day",
       "Night",
+      "Dusk",
       "Sunset",
       "Sunrise",
       "Overcast",
       "Rainy",
       "Snowy",
       "Foggy",
-      "Stormy",
-      "Golden Hour",
-      "Blue Hour"
+      "Stormy"
     ]
   },
   lighting: {
@@ -213,6 +257,7 @@ const SELECTOR_OPTIONS = {
       "Studio",
       "Golden Hour",
       "Blue Hour",
+      "Night City Lights",
       "Neon",
       "Cinematic",
       "Soft",
@@ -231,6 +276,8 @@ const SELECTOR_OPTIONS = {
       "High Contrast",
       "Low Key",
       "High Key",
+      "Cinematic",
+      "Film Noir",
       "Silhouette"
     ]
   }
