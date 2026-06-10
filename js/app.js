@@ -10,6 +10,7 @@ class PromptApp {
   init() {
     this.populateDropdowns();
     this.attachEventListeners();
+    this._setupKeyboardShortcuts();
     this.renderAccessoriesTags();
     this.updateOutput();
     this.renderHistory();
@@ -94,6 +95,79 @@ class PromptApp {
     document.getElementById('import-btn').addEventListener('click', () => this.importJSON());
     document.getElementById('reset-btn').addEventListener('click', () => this.resetForm());
     document.getElementById('save-history-btn').addEventListener('click', () => this.saveToHistory());
+    document.getElementById('shortcuts-btn').addEventListener('click', () => this._toggleShortcutModal(true));
+    document.getElementById('modal-close-btn').addEventListener('click', () => this._toggleShortcutModal(false));
+    document.getElementById('shortcuts-modal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) this._toggleShortcutModal(false);
+    });
+  }
+
+  _isInputFocused() {
+    const tag = document.activeElement?.tagName?.toLowerCase();
+    return tag === 'input' || tag === 'textarea' || tag === 'select';
+  }
+
+  _setupKeyboardShortcuts() {
+    document.addEventListener('keydown', (e) => {
+      // Prevent shortcuts when typing in form fields (except Cmd/Ctrl combos)
+      if (this._isInputFocused() && !(e.metaKey || e.ctrlKey)) return;
+
+      // Cmd/Ctrl + Enter → Copy (universally safe, no browser default conflict)
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        this.copyOutput();
+        return;
+      }
+
+      const key = e.key.toLowerCase();
+
+      // R → Randomize
+      if (key === 'r' && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+        this.randomizeSelectors();
+        return;
+      }
+
+      // S → Save to history
+      if (key === 's' && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+        this.saveToHistory();
+        return;
+      }
+
+      // E → Export
+      if (key === 'e' && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+        this.exportJSON();
+        return;
+      }
+
+      // I → Import
+      if (key === 'i' && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+        this.importJSON();
+        return;
+      }
+
+      // Shift + D → Reset (Shift modifier prevents accidental press)
+      if (key === 'd' && e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        this.resetForm();
+        return;
+      }
+
+      // ` → Open shortcut guide
+      if (key === '`' && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+        this._toggleShortcutModal(true);
+        return;
+      }
+
+      // Escape → Close shortcut guide
+      if (e.key === 'Escape') {
+        this._toggleShortcutModal(false);
+        return;
+      }
+    });
+  }
+
+  _toggleShortcutModal(open) {
+    const modal = document.getElementById('shortcuts-modal');
+    modal.classList.toggle('open', open);
   }
 
   handleTypeChange() {
@@ -359,11 +433,11 @@ class PromptApp {
     });
   }
 
-  showToast(message) {
+  showToast(message, duration = 2000) {
     const toast = document.getElementById('toast');
     toast.textContent = message;
     toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2000);
+    setTimeout(() => toast.classList.remove('show'), duration);
   }
 }
 

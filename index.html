@@ -3,15 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="version" content="1.2.0">
+  <meta name="version" content="1.3.0">
   <title>Prompt JSON Maker - AI Image Generation Prompt Builder</title>
+  <meta name="theme-color" content="#FFFFFF">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" sizes="any" type="image/svg+xml">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>Prompt JSON Maker</h1>
-      <p>Build structured prompts for AI image generation</p>
+      <div class="header-content">
+        <div class="header-title">
+          <img src="icon.svg" alt="Prompt JSON Maker" class="header-logo">
+          <div>
+            <h1>Prompt JSON Maker</h1>
+            <p>Build structured prompts for AI image generation</p>
+          </div>
+        </div>
+        <button id="shortcuts-btn" class="shortcuts-btn" title="Keyboard shortcuts (`)">?</button>
+      </div>
     </header>
 
     <div class="main-content">
@@ -271,8 +282,28 @@
     </div>
 
     <footer>
-      <p>Prompt JSON Maker v1.2.0</p>
+      <p>Prompt JSON Maker v1.3.0</p>
     </footer>
+  </div>
+
+  <!-- Shortcuts Modal -->
+  <div id="shortcuts-modal" class="modal-overlay">
+    <div class="modal" role="dialog" aria-label="Keyboard shortcuts">
+      <div class="modal-header">
+        <h2>Keyboard Shortcuts</h2>
+        <button id="modal-close-btn" class="modal-close-btn" title="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="shortcut-row"><kbd>Cmd/Ctrl + Enter</kbd><span>Copy output</span></div>
+        <div class="shortcut-row"><kbd>R</kbd><span>Randomize</span></div>
+        <div class="shortcut-row"><kbd>S</kbd><span>Save to history</span></div>
+        <div class="shortcut-row"><kbd>E</kbd><span>Export</span></div>
+        <div class="shortcut-row"><kbd>I</kbd><span>Import</span></div>
+        <div class="shortcut-row"><kbd>Shift + D</kbd><span>Reset form</span></div>
+        <div class="shortcut-row"><kbd>`</kbd><span>Open this guide</span></div>
+        <div class="shortcut-row"><kbd>Esc</kbd><span>Close this guide</span></div>
+      </div>
+    </div>
   </div>
 
   <!-- Toast notification -->
@@ -282,5 +313,10 @@
   <script src="js/data.js"></script>
   <script src="js/generator.js"></script>
   <script src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
+  </script>
 </body>
 </html>

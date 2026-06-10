@@ -1,0 +1,16 @@
+{
+  "name": "Prompt JSON Maker",
+  "short_name": "Prompt JSON",
+  "description": "Build structured prompts for AI image generation",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0075DE",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
