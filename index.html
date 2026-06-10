@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="version" content="1.0.1">
+  <meta name="version" content="1.2.0">
   <title>Prompt JSON Maker - AI Image Generation Prompt Builder</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -11,6 +11,7 @@
   <div class="container">
     <header>
       <h1>Prompt JSON Maker</h1>
+      <p>Build structured prompts for AI image generation</p>
     </header>
 
     <div class="main-content">
@@ -21,7 +22,7 @@
           <h2 class="section-title">Text Prompts</h2>
           <label for="prompt">Prompt</label>
           <textarea id="prompt" placeholder="Describe your main subject and scene..."></textarea>
-          
+
           <label for="negative_prompt">Negative Prompt</label>
           <textarea id="negative_prompt" placeholder="What to avoid in the image..."></textarea>
         </div>
@@ -36,6 +37,8 @@
             <label for="type-painting">Painting</label>
             <input type="radio" name="type" value="drawing" id="type-drawing">
             <label for="type-drawing">Drawing</label>
+            <input type="radio" name="type" value="render" id="type-render">
+            <label for="type-render">Render</label>
           </div>
 
           <!-- Photo Settings -->
@@ -81,6 +84,28 @@
               <option value="">Select option...</option>
             </select>
           </div>
+
+          <!-- Render Settings -->
+          <div id="render-settings" class="conditional-section">
+            <div class="form-grid">
+              <div>
+                <label for="render-style">Style</label>
+                <select id="render-style">
+                  <option value="">Select style...</option>
+                </select>
+              </div>
+              <div>
+                <label for="render-quality">Quality</label>
+                <select id="render-quality">
+                  <option value="">Select quality...</option>
+                </select>
+              </div>
+            </div>
+            <label for="render-engine">Engine</label>
+            <select id="render-engine">
+              <option value="">Select engine...</option>
+            </select>
+          </div>
         </div>
 
         <!-- Subject Settings -->
@@ -122,20 +147,28 @@
               </select>
             </div>
             <div>
-              <label for="subject-accessories">Accessories</label>
-              <select id="subject-accessories">
-                <option value="">Select accessories...</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-grid">
-            <div>
               <label for="subject-weapon">Weapon</label>
               <select id="subject-weapon">
                 <option value="">Select weapon...</option>
               </select>
             </div>
           </div>
+          <div class="form-grid">
+            <div>
+              <label for="subject-hair-color">Hair Color</label>
+              <select id="subject-hair-color">
+                <option value="">Select hair color...</option>
+              </select>
+            </div>
+            <div>
+              <label for="subject-hair-style">Hair Style</label>
+              <select id="subject-hair-style">
+                <option value="">Select hair style...</option>
+              </select>
+            </div>
+          </div>
+          <label>Accessories</label>
+          <div id="accessories-tags" class="tags-container"></div>
         </div>
 
         <!-- View, Scene & Lighting -->
@@ -170,6 +203,20 @@
               </select>
             </div>
           </div>
+          <div class="form-grid">
+            <div>
+              <label for="scene-effect">Effect</label>
+              <select id="scene-effect">
+                <option value="">Select effect...</option>
+              </select>
+            </div>
+            <div>
+              <label for="scene-photo-filter">Photo Filter</label>
+              <select id="scene-photo-filter">
+                <option value="">Select filter...</option>
+              </select>
+            </div>
+          </div>
           <hr class="form-divider">
           <div class="form-grid">
             <div>
@@ -190,24 +237,41 @@
 
       <!-- Output Section -->
       <div class="output-section">
-        <div class="form-section">
-          <h2 class="section-title">JSON Output</h2>
+        <div class="form-section output-card">
+          <div class="output-header">
+            <div class="radio-group format-toggle">
+              <input type="radio" name="output-format" value="json" id="format-json" checked>
+              <label for="format-json">JSON</label>
+              <input type="radio" name="output-format" value="text" id="format-text">
+              <label for="format-text">Text</label>
+            </div>
+          </div>
           <textarea id="json-output" readonly></textarea>
-          
-          <div class="button-group">
-            <button id="copy-btn">Copy JSON</button>
-            <button id="random-btn" class="secondary">Random Selector</button>
+
+          <div class="button-group cols-2">
+            <button id="copy-btn">Copy</button>
+            <button id="random-btn" class="secondary">Random</button>
           </div>
-          <div class="button-group">
-            <button id="save-btn" class="secondary">Save</button>
-            <button id="load-btn" class="secondary">Load</button>
+          <div class="button-group cols-3">
+            <button id="export-btn" class="secondary">Export</button>
+            <button id="import-btn" class="secondary">Import</button>
+            <button id="reset-btn" class="secondary">Reset</button>
           </div>
+        </div>
+
+        <!-- History -->
+        <div class="form-section">
+          <div class="history-header">
+            <h2 class="section-title">History</h2>
+            <button id="save-history-btn" class="save-history-btn">Save</button>
+          </div>
+          <div id="history-list"></div>
         </div>
       </div>
     </div>
 
     <footer>
-      <p>Prompt JSON Maker - Build structured prompts for AI image generation</p>
+      <p>Prompt JSON Maker v1.2.0</p>
     </footer>
   </div>
 

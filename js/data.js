@@ -12,8 +12,7 @@ const SELECTOR_OPTIONS = {
       "Leica",
       "Hasselblad",
       "Polaroid",
-      "Instant Camera",
-      "None"
+      "Instant Camera"
     ],
     lens_type: [
       "Fisheye",
@@ -22,8 +21,7 @@ const SELECTOR_OPTIONS = {
       "50mm",
       "85mm",
       "100mm",
-      "200mm",
-      "None"
+      "200mm"
     ],
     custom: [
       "HDR",
@@ -33,8 +31,7 @@ const SELECTOR_OPTIONS = {
       "Double Exposure",
       "High Speed",
       "Macro",
-      "Tilt-Shift",
-      "None"
+      "Tilt-Shift"
     ]
   },
   painting_drawing: {
@@ -69,7 +66,42 @@ const SELECTOR_OPTIONS = {
       "Sketch",
       "Line Art",
       "Pointillism",
-      "Stippling",
+      "Stippling"
+    ]
+  },
+  render: {
+    style: [
+      "3D Render",
+      "Pixar",
+      "Disney",
+      "Pixel Art",
+      "Cel Shading",
+      "Unreal Engine",
+      "Low Poly",
+      "Isometric",
+      "Voxel Art",
+      "Claymation",
+      "Paper Craft",
+      "LEGO Style"
+    ],
+    quality: [
+      "Photorealistic",
+      "Stylized",
+      "Hyper-realistic",
+      "Painterly",
+      "Cartoon",
+      "Chibi",
+      "Semi-realistic"
+    ],
+    engine: [
+      "Blender",
+      "Maya",
+      "Cinema 4D",
+      "Houdini",
+      "ZBrush",
+      "Substance Painter",
+      "Unreal Engine 5",
+      "Unity",
       "None"
     ]
   },
@@ -117,8 +149,7 @@ const SELECTOR_OPTIONS = {
       "Business",
       "Athletic",
       "Vintage",
-      "Streetwear",
-      "None"
+      "Streetwear"
     ],
     action: [
       "Standing",
@@ -155,8 +186,7 @@ const SELECTOR_OPTIONS = {
       "Bikini Top",
       "Sports Bra",
       "Corset",
-      "Armor",
-      "None"
+      "Armor"
     ],
     bottom_type: [
       "Jeans",
@@ -169,8 +199,7 @@ const SELECTOR_OPTIONS = {
       "Underwear",
       "Bikini Bottom",
       "Fishnet Stockings",
-      "Armor",
-      "None"
+      "Armor"
     ],
     accessories: [
       "Glasses",
@@ -191,8 +220,7 @@ const SELECTOR_OPTIONS = {
       "Necklace",
       "Bracelet",
       "Ring",
-      "Earrings",
-      "None"
+      "Earrings"
     ],
     weapon: [
       "Sword",
@@ -209,8 +237,37 @@ const SELECTOR_OPTIONS = {
       "Nunchucks",
       "Bo Staff",
       "Glaive",
-      "Flail",
-      "None"
+      "Flail"
+    ],
+    hair_color: [
+      "Black",
+      "Brown",
+      "Blonde",
+      "Red",
+      "White",
+      "Gray",
+      "Pink",
+      "Blue",
+      "Purple",
+      "Green",
+      "Auburn",
+      "Strawberry Blonde"
+    ],
+    hair_style: [
+      "Short",
+      "Long",
+      "Curly",
+      "Straight",
+      "Wavy",
+      "Ponytail",
+      "Bun",
+      "Braids",
+      "Dreadlocks",
+      "Buzz Cut",
+      "Undercut",
+      "Afro",
+      "Mohawk",
+      "Bald"
     ]
   },
   scene: {
@@ -249,6 +306,34 @@ const SELECTOR_OPTIONS = {
       "Snowy",
       "Foggy",
       "Stormy"
+    ],
+    effect: [
+      "Lens Flare",
+      "Analog Grain",
+      "Light Leak",
+      "Bokeh",
+      "Motion Blur",
+      "Radial Blur",
+      "Chromatic Aberration",
+      "Vignette",
+      "Prism Effect",
+      "Double Vision",
+      "Film Damage",
+      "Dust Particles",
+      "Rain Droplets",
+      "Snow Particles",
+      "None"
+    ],
+    photo_filter: [
+      "Film Simulation",
+      "Instagram filter",
+      "Tiktok effect",
+      "Tiktok sticker",
+      "B&W Classic",
+      "B&W High Contrast",
+      "Cyanotype",
+      "Cross Process",
+      "None"
     ]
   },
   lighting: {
