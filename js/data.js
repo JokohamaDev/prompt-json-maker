@@ -12,16 +12,22 @@ const SELECTOR_OPTIONS = {
       "Leica",
       "Hasselblad",
       "Polaroid",
-      "Instant Camera"
+      "Instant Camera",
+      "GoPro",
+      "DJI Drone",
+      "Medium Format"
     ],
     lens_type: [
       "Fisheye",
+      "14mm",
       "24mm",
       "35mm",
       "50mm",
       "85mm",
       "100mm",
-      "200mm"
+      "135mm",
+      "200mm",
+      "300mm"
     ],
     custom: [
       "HDR",
@@ -31,23 +37,39 @@ const SELECTOR_OPTIONS = {
       "Double Exposure",
       "High Speed",
       "Macro",
-      "Tilt-Shift"
+      "Tilt-Shift",
+      "Infrared",
+      "Shallow DOF"
     ]
   },
-  painting_drawing: {
+  art: {
     style: [
       "Oil Painting",
       "Watercolor",
       "Digital Art",
       "Anime",
+      "Manga",
+      "Comic Book",
       "Realistic",
       "Abstract",
       "Impressionist",
+      "Expressionist",
       "Surrealist",
       "Pop Art",
       "Cubism",
       "Art Nouveau",
-      "Minimalist"
+      "Art Deco",
+      "Baroque",
+      "Gothic",
+      "Ukiyo-e",
+      "Minimalist",
+      "Concept Art",
+      "Storybook",
+      "Sketch",
+      "Line Art",
+      "Ink Wash",
+      "Pointillism",
+      "Stippling"
     ],
     colors: [
       "Vibrant",
@@ -58,15 +80,25 @@ const SELECTOR_OPTIONS = {
       "Earth Tones",
       "Neon",
       "Muted",
-      "High Contrast"
+      "High Contrast",
+      "Duotone",
+      "Sepia"
     ],
-    custom: [
+    medium: [
+      "Pencil",
+      "Charcoal",
+      "Ink",
+      "Pastel Crayon",
+      "Acrylic",
+      "Oil",
+      "Gouache",
+      "Spray Paint",
+      "Canvas",
+      "Paper",
+      "Digital Tablet",
       "Mixed Media",
       "Collage",
-      "Sketch",
-      "Line Art",
-      "Pointillism",
-      "Stippling"
+      "Woodblock"
     ]
   },
   render: {
@@ -76,13 +108,14 @@ const SELECTOR_OPTIONS = {
       "Disney",
       "Pixel Art",
       "Cel Shading",
-      "Unreal Engine",
       "Low Poly",
       "Isometric",
       "Voxel Art",
       "Claymation",
       "Paper Craft",
-      "LEGO Style"
+      "LEGO Style",
+      "Wireframe",
+      "Retro 3D"
     ],
     quality: [
       "Photorealistic",
@@ -101,9 +134,77 @@ const SELECTOR_OPTIONS = {
       "ZBrush",
       "Substance Painter",
       "Unreal Engine 5",
-      "Unity",
-      "None"
+      "Unity"
     ]
+  },
+  design: {
+    type: [
+      "Graphic Design",
+      "Logo",
+      "Poster",
+      "Flyer",
+      "Book Cover",
+      "Album Cover",
+      "Magazine Layout",
+      "Packaging",
+      "Label",
+      "Business Card",
+      "UI / App Screen",
+      "Website Layout",
+      "Icon Set",
+      "Infographic",
+      "Typography Art",
+      "Motion Graphics",
+      "Sticker",
+      "T-shirt Design",
+      "Tattoo Design",
+      "Pattern / Textile"
+    ],
+    aesthetic: [
+      "Modern",
+      "Minimalist",
+      "Retro",
+      "Vintage",
+      "Swiss / International",
+      "Bauhaus",
+      "Memphis",
+      "Y2K",
+      "Brutalist",
+      "Maximalist",
+      "Vaporwave",
+      "Cyberpunk",
+      "Art Deco",
+      "Psychedelic",
+      "Corporate",
+      "Organic",
+      "Geometric",
+      "Hand Drawn",
+      "Flat Design",
+      "Glassmorphism",
+      "Neomorphism"
+    ],
+    reference: {
+      "Graphic Design": ["Saul Bass", "Paul Rand", "Massimo Vignelli", "Milton Glaser", "Paula Scher", "David Carson", "Stefan Sagmeister", "Josef Müller-Brockmann", "Herb Lubalin", "Neville Brody", "Shepard Fairey", "Pentagram"],
+      "Logo": ["Paul Rand", "Milton Glaser", "Paula Scher", "Saul Bass", "Massimo Vignelli", "Pentagram", "Nike", "Apple", "NASA", "Supreme"],
+      "Poster": ["Saul Bass", "Milton Glaser", "Paula Scher", "Shepard Fairey", "David Carson", "Josef Müller-Brockmann", "Neville Brody", "Vogue", "Pentagram"],
+      "Flyer": ["Shepard Fairey", "David Carson", "Milton Glaser", "Neville Brody", "Supreme", "Pentagram"],
+      "Book Cover": ["Chip Kidd", "David Carson", "Paula Scher", "Massimo Vignelli", "Muji", "Pentagram"],
+      "Album Cover": ["Stefan Sagmeister", "David Carson", "Milton Glaser", "Saul Bass", "Neville Brody", "KAWS", "Takashi Murakami"],
+      "Magazine Layout": ["Vogue", "David Carson", "Massimo Vignelli", "Herb Lubalin", "Neville Brody", "Pentagram"],
+      "Packaging": ["Dieter Rams", "Apple", "Muji", "Paul Rand", "Supreme", "Pentagram", "Nike"],
+      "Label": ["Milton Glaser", "Muji", "Supreme", "Pentagram", "Vogue"],
+      "Business Card": ["Massimo Vignelli", "Josef Müller-Brockmann", "Muji", "Apple", "Pentagram"],
+      "UI / App Screen": ["Apple", "Dieter Rams", "Muji", "Pentagram"],
+      "Website Layout": ["Apple", "Massimo Vignelli", "Josef Müller-Brockmann", "Muji", "Pentagram"],
+      "Icon Set": ["Apple", "Dieter Rams", "NASA", "Muji", "Pentagram"],
+      "Infographic": ["Massimo Vignelli", "Josef Müller-Brockmann", "NASA", "Pentagram"],
+      "Typography Art": ["Herb Lubalin", "Paula Scher", "David Carson", "Massimo Vignelli", "Neville Brody", "Josef Müller-Brockmann"],
+      "Motion Graphics": ["Saul Bass", "Apple", "Neville Brody", "Pentagram"],
+      "Sticker": ["Shepard Fairey", "KAWS", "Takashi Murakami", "Supreme", "Nike", "NASA"],
+      "T-shirt Design": ["Supreme", "Nike", "Shepard Fairey", "KAWS", "Takashi Murakami", "Apple"],
+      "Tattoo Design": ["Takashi Murakami", "KAWS", "Shepard Fairey"],
+      "Pattern / Textile": ["Takashi Murakami", "Muji", "Supreme", "Nike", "KAWS", "Vogue"]
+    }
   },
   view: {
     perspective: [
@@ -115,7 +216,9 @@ const SELECTOR_OPTIONS = {
       "Bird's Eye",
       "Worm's Eye",
       "Three-quarter",
-      "Over-the-shoulder"
+      "Over-the-shoulder",
+      "Dutch Angle",
+      "POV / First Person"
     ],
     distance: [
       "Wide",
@@ -123,6 +226,8 @@ const SELECTOR_OPTIONS = {
       "Close-up",
       "Extreme Close-up",
       "Full Body",
+      "Cowboy Shot",
+      "Bust Shot",
       "Portrait",
       "Establishing Shot"
     ]
@@ -138,7 +243,9 @@ const SELECTOR_OPTIONS = {
       "Casual",
       "Professional",
       "Adventurous",
-      "Mysterious"
+      "Mysterious",
+      "Cute",
+      "Fierce"
     ],
     clothes: [
       "Formal",
@@ -149,7 +256,10 @@ const SELECTOR_OPTIONS = {
       "Business",
       "Athletic",
       "Vintage",
-      "Streetwear"
+      "Streetwear",
+      "Military",
+      "Gothic",
+      "Elegant"
     ],
     action: [
       "Standing",
@@ -168,7 +278,11 @@ const SELECTOR_OPTIONS = {
       "Cooking",
       "Playing Instrument",
       "Singing",
-      "Interacting"
+      "Interacting",
+      "Meditating",
+      "Posing",
+      "Crouching",
+      "Leaping"
     ],
     top_type: [
       "T-shirt",
@@ -181,28 +295,34 @@ const SELECTOR_OPTIONS = {
       "Jacket",
       "Coat",
       "Robe",
+      "Dress",
       "Bra",
       "Bralette",
       "Bikini Top",
       "Sports Bra",
       "Corset",
-      "Armor"
+      "Armor",
+      "Kimono",
+      "Vest",
+      "Cape"
     ],
     bottom_type: [
       "Jeans",
       "Pants",
       "Skirt",
       "Shorts",
-      "Dress",
       "Leggings",
       "Panties",
       "Underwear",
       "Bikini Bottom",
       "Fishnet Stockings",
-      "Armor"
+      "Armor",
+      "Cargo Pants",
+      "Sweatpants"
     ],
     accessories: [
       "Glasses",
+      "Sunglasses",
       "Hat",
       "Scarf",
       "Jewelry",
@@ -220,7 +340,12 @@ const SELECTOR_OPTIONS = {
       "Necklace",
       "Bracelet",
       "Ring",
-      "Earrings"
+      "Earrings",
+      "Crown",
+      "Tiara",
+      "Tattoo",
+      "Piercing",
+      "Cape"
     ],
     weapon: [
       "Sword",
@@ -233,11 +358,14 @@ const SELECTOR_OPTIONS = {
       "Dagger",
       "Spear",
       "Hammer",
-      "Magic wand",
+      "Magic Wand",
       "Nunchucks",
-      "Bo Staff",
       "Glaive",
-      "Flail"
+      "Flail",
+      "Scythe",
+      "Shield",
+      "Dual Blades",
+      "Trident"
     ],
     hair_color: [
       "Black",
@@ -251,7 +379,10 @@ const SELECTOR_OPTIONS = {
       "Purple",
       "Green",
       "Auburn",
-      "Strawberry Blonde"
+      "Strawberry Blonde",
+      "Silver",
+      "Ombre",
+      "Multicolor"
     ],
     hair_style: [
       "Short",
@@ -260,6 +391,7 @@ const SELECTOR_OPTIONS = {
       "Straight",
       "Wavy",
       "Ponytail",
+      "Twin Tails",
       "Bun",
       "Braids",
       "Dreadlocks",
@@ -267,6 +399,9 @@ const SELECTOR_OPTIONS = {
       "Undercut",
       "Afro",
       "Mohawk",
+      "Bob Cut",
+      "Pixie Cut",
+      "Side Swept",
       "Bald"
     ]
   },
@@ -279,14 +414,21 @@ const SELECTOR_OPTIONS = {
       "Bathroom",
       "Studio",
       "Office",
+      "Cafe",
       "Outdoor",
       "Beach",
       "Desert",
       "Forest",
       "Mountain",
       "City",
-      "Urban",
+      "Alley",
+      "Rooftop",
       "Nature",
+      "Garden",
+      "Temple",
+      "Castle",
+      "Dungeon",
+      "Ruins",
       "Fantasy World",
       "Cyberpunk",
       "Historical",
@@ -305,7 +447,10 @@ const SELECTOR_OPTIONS = {
       "Rainy",
       "Snowy",
       "Foggy",
-      "Stormy"
+      "Stormy",
+      "Windy",
+      "Misty",
+      "Clear Sky"
     ],
     effect: [
       "Lens Flare",
@@ -322,7 +467,8 @@ const SELECTOR_OPTIONS = {
       "Dust Particles",
       "Rain Droplets",
       "Snow Particles",
-      "None"
+      "Glitch",
+      "Smoke / Haze"
     ],
     photo_filter: [
       "Film Simulation",
@@ -333,7 +479,8 @@ const SELECTOR_OPTIONS = {
       "B&W High Contrast",
       "Cyanotype",
       "Cross Process",
-      "None"
+      "Lomography",
+      "Kodachrome"
     ]
   },
   lighting: {
@@ -347,9 +494,12 @@ const SELECTOR_OPTIONS = {
       "Cinematic",
       "Soft",
       "Hard",
-      "Backlit",
       "Rembrandt",
-      "Butterfly"
+      "Butterfly",
+      "Candlelight",
+      "Moonlight",
+      "Fluorescent",
+      "LED"
     ],
     lighting_2: [
       "Front Lit",
@@ -361,9 +511,104 @@ const SELECTOR_OPTIONS = {
       "High Contrast",
       "Low Key",
       "High Key",
-      "Cinematic",
       "Film Noir",
-      "Silhouette"
+      "Silhouette",
+      "Split Lighting",
+      "Volumetric"
     ]
+  }
+};
+
+// Randomization presets — exclude illogical combos per subject type
+const RANDOM_PRESETS = {
+  none: { label: "No Filter", exclude: {} },
+  woman: {
+    label: "Woman",
+    exclude: {
+      'subject-hair-style': ['Bald', 'Buzz Cut'],
+      'subject-weapon': ['Hammer', 'Axe', 'Flail', 'Nunchucks'],
+    }
+  },
+  man: {
+    label: "Man",
+    exclude: {
+      'subject-top-type': ['Bra', 'Bralette', 'Bikini Top', 'Sports Bra', 'Corset', 'Crop top', 'Dress'],
+      'subject-bottom-type': ['Panties', 'Bikini Bottom', 'Fishnet Stockings', 'Skirt'],
+      'subject-hair-style': ['Ponytail', 'Twin Tails', 'Bun', 'Braids', 'Pixie Cut'],
+      'subject-clothes': ['Elegant'],
+      'subject-accessory': ['Tiara', 'Veil'],
+    }
+  },
+  child: {
+    label: "Child",
+    exclude: {
+      'subject-top-type': ['Bra', 'Bralette', 'Bikini Top', 'Sports Bra', 'Corset', 'Crop top'],
+      'subject-bottom-type': ['Panties', 'Bikini Bottom', 'Fishnet Stockings'],
+      'subject-characteristic': ['Old', 'Muscular', 'Professional', 'Mysterious', 'Fierce'],
+      'subject-weapon': ['Gun', 'Axe', 'Hammer', 'Flail', 'Nunchucks', 'Crossbow', 'Scythe'],
+      'subject-clothes': ['Business', 'Formal', 'Gothic', 'Military'],
+      'subject-accessory': ['Choker', 'Veil', 'Chains', 'Tattoo', 'Piercing'],
+    }
+  },
+  fantasy: {
+    label: "Fantasy",
+    exclude: {
+      'photo-device': ['iPhone', 'Samsung Galaxy', 'Google Pixel', 'GoPro', 'DJI Drone'],
+      'scene-photo-filter': ['Instagram filter', 'Tiktok effect', 'Tiktok sticker'],
+    }
+  },
+  modern: {
+    label: "Modern",
+    exclude: {
+      'subject-clothes': ['Traditional', 'Futuristic', 'Fantasy', 'Vintage'],
+      'subject-top-type': ['Armor', 'Kimono'],
+      'subject-bottom-type': ['Armor'],
+      'subject-weapon': ['Sword', 'Katana', 'Axe', 'Bow', 'Crossbow', 'Staff', 'Dagger', 'Spear', 'Hammer', 'Magic Wand', 'Glaive', 'Flail', 'Scythe', 'Shield', 'Dual Blades', 'Trident'],
+      'subject-accessory': ['Crown', 'Tiara', 'Cape'],
+      'scene-1': ['Temple', 'Castle', 'Dungeon', 'Ruins', 'Fantasy World', 'Historical', 'Sci-Fi']
+    }
+  },
+  scifi: {
+    label: "Sci-Fi",
+    exclude: {
+      'subject-clothes': ['Traditional', 'Fantasy', 'Vintage'],
+      'subject-top-type': ['Kimono', 'Armor'],
+      'subject-bottom-type': ['Armor'],
+      'subject-weapon': ['Sword', 'Katana', 'Axe', 'Bow', 'Crossbow', 'Staff', 'Dagger', 'Spear', 'Hammer', 'Glaive', 'Flail', 'Scythe', 'Shield', 'Dual Blades', 'Trident'],
+      'scene-1': ['Castle', 'Dungeon', 'Ruins', 'Historical', 'Fantasy World'],
+      'scene-photo-filter': ['Cyanotype', 'Cross Process', 'Lomography', 'Kodachrome']
+    }
+  },
+  historical: {
+    label: "Historical / Vintage",
+    exclude: {
+      'photo-device': ['iPhone', 'Samsung Galaxy', 'Google Pixel', 'GoPro', 'DJI Drone'],
+      'subject-clothes': ['Futuristic', 'Streetwear', 'Athletic'],
+      'subject-accessory': ['Headphones'],
+      'subject-weapon': ['Gun'],
+      'scene-1': ['Cyberpunk', 'Sci-Fi', 'Post-Apocalyptic', 'Space', 'Office'],
+      'scene-photo-filter': ['Instagram filter', 'Tiktok effect', 'Tiktok sticker']
+    }
+  },
+  casual: {
+    label: "Casual / Everyday",
+    exclude: {
+      'subject-clothes': ['Fantasy', 'Futuristic', 'Military', 'Gothic'],
+      'subject-top-type': ['Armor', 'Kimono', 'Cape'],
+      'subject-bottom-type': ['Armor'],
+      'subject-weapon': ['Sword', 'Katana', 'Axe', 'Gun', 'Bow', 'Crossbow', 'Staff', 'Dagger', 'Spear', 'Hammer', 'Magic Wand', 'Nunchucks', 'Glaive', 'Flail', 'Scythe', 'Shield', 'Dual Blades', 'Trident'],
+      'subject-accessory': ['Crown', 'Tiara', 'Cape', 'Chains', 'Veil'],
+      'scene-1': ['Dungeon', 'Castle', 'Ruins', 'Fantasy World', 'Space', 'Underwater', 'Desert'],
+      'subject-action': ['Fighting', 'Flying', 'Leaping']
+    }
+  },
+  cyberpunk: {
+    label: "Cyberpunk",
+    exclude: {
+      'subject-clothes': ['Traditional', 'Formal', 'Vintage', 'Business'],
+      'subject-accessory': ['Tiara', 'Crown', 'Veil'],
+      'scene-1': ['Nature', 'Forest', 'Castle', 'Dungeon', 'Garden', 'Historical'],
+      'art-colors': ['Pastel', 'Earth Tones', 'Muted']
+    }
   }
 };

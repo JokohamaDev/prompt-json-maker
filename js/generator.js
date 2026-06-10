@@ -61,12 +61,20 @@ class PromptGenerator {
           engine: document.getElementById('render-engine').value
         }
       };
+    } else if (state.type === 'design') {
+      state.style = {
+        design: {
+          type: document.getElementById('design-type').value,
+          aesthetic: document.getElementById('design-aesthetic').value,
+          reference: document.getElementById('design-reference').value
+        }
+      };
     } else {
       state.style = {
-        painting_drawing: {
-          style: document.getElementById('painting-style').value,
-          colors: document.getElementById('painting-colors').value,
-          custom: document.getElementById('painting-custom').value
+        art: {
+          style: document.getElementById('art-style').value,
+          colors: document.getElementById('art-colors').value,
+          medium: document.getElementById('art-medium').value
         }
       };
     }
@@ -109,74 +117,94 @@ class PromptGenerator {
     return cleaned;
   }
 
-  // Generate natural language prompt from state
+  // Generate sectioned natural language prompt
   generateNaturalLanguage() {
     const state = this.updateState();
-    const parts = [];
+    const sections = [];
 
-    const subjectParts = [];
-    if (state.subject.characteristic) subjectParts.push(state.subject.characteristic.toLowerCase());
-    if (state.subject.clothes) subjectParts.push(`in ${state.subject.clothes.toLowerCase()} clothes`);
+    // Main prompt (no label)
+    if (state.prompt) sections.push(state.prompt.trim());
+
+    // Subject section
+    const subParts = [];
+    if (state.subject.characteristic) subParts.push(state.subject.characteristic.toLowerCase());
+    if (state.subject.clothes) subParts.push(`in ${state.subject.clothes.toLowerCase()} clothes`);
     if (state.subject.hair_color || state.subject.hair_style) {
       const hair = [state.subject.hair_color, state.subject.hair_style].filter(Boolean).join(' ').toLowerCase();
-      subjectParts.push(`with ${hair} hair`);
+      subParts.push(`with ${hair} hair`);
     }
-    if (subjectParts.length > 0) parts.push(`A ${subjectParts.join(', ')} person`);
-
-    if (state.subject.action) parts.push(state.subject.action.toLowerCase());
-
-    const clothingParts = [];
-    if (state.subject.top_type) clothingParts.push(state.subject.top_type.toLowerCase());
-    if (state.subject.bottom_type) clothingParts.push(state.subject.bottom_type.toLowerCase());
-    if (clothingParts.length > 0) parts.push(`wearing ${clothingParts.join(' and ')}`);
-
-    if (state.subject.accessories && state.subject.accessories.length > 0) {
-      parts.push(`with ${state.subject.accessories.map(a => a.toLowerCase()).join(', ')}`);
+    let subLine = subParts.length > 0 ? `A ${subParts.join(', ')} person` : '';
+    if (state.subject.action) subLine += (subLine ? ', ' : '') + state.subject.action.toLowerCase();
+    const cloths = [state.subject.top_type, state.subject.bottom_type].filter(Boolean).map(s => s.toLowerCase());
+    if (cloths.length > 0) subLine += (subLine ? ', ' : '') + `wearing ${cloths.join(' and ')}`;
+    if (state.subject.accessories?.length > 0) {
+      subLine += (subLine ? ', ' : '') + `with ${state.subject.accessories.map(a => a.toLowerCase()).join(', ')}`;
     }
+    if (state.subject.weapon) subLine += (subLine ? ', ' : '') + `holding a ${state.subject.weapon.toLowerCase()}`;
+    if (subLine) sections.push(`Subject: ${subLine}.`);
 
-    if (state.subject.weapon) parts.push(`holding a ${state.subject.weapon.toLowerCase()}`);
+    // Scene section
+    const scnParts = [];
+    if (state.environment.scene_1) scnParts.push(state.environment.scene_1.toLowerCase());
+    if (state.environment.scene_2) scnParts.push(state.environment.scene_2.toLowerCase());
+    if (scnParts.length > 0) scnParts[0] = `${scnParts[0]} setting`;
+    if (state.environment.effect) scnParts.push(`${state.environment.effect.toLowerCase()} effect`);
+    if (state.environment.photo_filter) scnParts.push(`${state.environment.photo_filter.toLowerCase()} filter`);
+    if (scnParts.length > 0) sections.push(`Scene: ${this._cap(scnParts.join(', '))}.`);
 
-    const sceneParts = [];
-    if (state.environment.scene_1) sceneParts.push(state.environment.scene_1.toLowerCase());
-    if (state.environment.scene_2) sceneParts.push(state.environment.scene_2.toLowerCase());
-    if (sceneParts.length > 0) parts.push(`in a ${sceneParts.join(' ')} setting`);
+    // View section
+    const viewParts = [];
+    if (state.view.perspective) viewParts.push(`${state.view.perspective.toLowerCase()} view`);
+    if (state.view.distance) viewParts.push(`${state.view.distance.toLowerCase()} shot`);
+    if (viewParts.length > 0) sections.push(`View: ${this._cap(viewParts.join(', '))}.`);
 
-    if (state.environment.effect) parts.push(`${state.environment.effect.toLowerCase()} effect`);
-    if (state.environment.photo_filter) parts.push(`${state.environment.photo_filter.toLowerCase()} filter`);
+    // Lighting section
+    const litParts = [];
+    if (state.lighting.lighting_1) litParts.push(state.lighting.lighting_1.toLowerCase());
+    if (state.lighting.lighting_2) litParts.push(state.lighting.lighting_2.toLowerCase());
+    if (litParts.length > 0) sections.push(`Lighting: ${this._cap(litParts.join(' and '))} lighting.`);
 
-    if (state.view.perspective) parts.push(`${state.view.perspective.toLowerCase()} view`);
-    if (state.view.distance) parts.push(`${state.view.distance.toLowerCase()} shot`);
-
-    const lightingParts = [];
-    if (state.lighting.lighting_1) lightingParts.push(state.lighting.lighting_1.toLowerCase());
-    if (state.lighting.lighting_2) lightingParts.push(state.lighting.lighting_2.toLowerCase());
-    if (lightingParts.length > 0) parts.push(`with ${lightingParts.join(' and ')} lighting`);
-
+    // Style section
+    let styleLine = '';
     if (state.type === 'photo' && state.style?.photo) {
-      const photoParts = [];
-      if (state.style.photo.device) photoParts.push(`shot on ${state.style.photo.device}`);
-      if (state.style.photo.lens_type) photoParts.push(`${state.style.photo.lens_type} lens`);
-      if (state.style.photo.custom) photoParts.push(state.style.photo.custom.toLowerCase());
-      if (photoParts.length > 0) parts.push(photoParts.join(', '));
+      const p = [];
+      if (state.style.photo.device) p.push(`shot on ${state.style.photo.device}`);
+      if (state.style.photo.lens_type) p.push(`${state.style.photo.lens_type} lens`);
+      if (state.style.photo.custom) p.push(state.style.photo.custom.toLowerCase());
+      if (p.length > 0) styleLine = p.join(', ');
     } else if (state.type === 'render' && state.style?.render) {
-      const renderParts = [];
-      if (state.style.render.style) renderParts.push(state.style.render.style.toLowerCase());
-      if (state.style.render.quality) renderParts.push(`${state.style.render.quality.toLowerCase()} quality`);
-      if (state.style.render.engine) renderParts.push(`made in ${state.style.render.engine}`);
-      if (renderParts.length > 0) parts.push(renderParts.join(', '));
-    } else if (state.style?.painting_drawing) {
-      const artParts = [];
-      if (state.style.painting_drawing.style) artParts.push(state.style.painting_drawing.style.toLowerCase());
-      if (state.style.painting_drawing.colors) artParts.push(`${state.style.painting_drawing.colors.toLowerCase()} colors`);
-      if (state.style.painting_drawing.custom) artParts.push(state.style.painting_drawing.custom.toLowerCase());
-      if (artParts.length > 0) parts.push(`in ${artParts.join(', ')} style`);
+      const p = [];
+      if (state.style.render.style) p.push(state.style.render.style.toLowerCase());
+      if (state.style.render.quality) p.push(`${state.style.render.quality.toLowerCase()} quality`);
+      if (state.style.render.engine) p.push(`made in ${state.style.render.engine}`);
+      if (p.length > 0) styleLine = p.join(', ');
+    } else if (state.style?.art) {
+      const p = [];
+      if (state.style.art.style) p.push(state.style.art.style.toLowerCase());
+      if (state.style.art.colors) p.push(`${state.style.art.colors.toLowerCase()} colors`);
+      if (state.style.art.medium) {
+        const med = state.style.art.medium.toLowerCase();
+        const surfaces = ['canvas', 'paper', 'digital tablet', 'mixed media', 'collage', 'woodblock'];
+        p.push(surfaces.includes(med) ? `on ${med}` : `using ${med}`);
+      }
+      if (p.length > 0) styleLine = p.join(', ');
+    } else if (state.style?.design) {
+      const p = [];
+      if (state.style.design.type) p.push(state.style.design.type.toLowerCase());
+      if (state.style.design.aesthetic) p.push(`${state.style.design.aesthetic.toLowerCase()} aesthetic`);
+      if (state.style.design.reference) p.push(`in the style of ${state.style.design.reference}`);
+      if (p.length > 0) styleLine = p.join(', ');
     }
+    if (styleLine) sections.push(`Style: ${this._cap(styleLine)}.`);
 
-    if (state.prompt) parts.unshift(state.prompt);
+    // Negative prompt
+    if (state.negative_prompt) sections.push(`Negative: ${state.negative_prompt.trim()}.`);
 
-    const result = parts.join(', ');
-    return result.charAt(0).toUpperCase() + result.slice(1);
+    return sections.join('\n');
   }
+
+  // Capitalize first char
+  _cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
   // Get output based on current format
   getOutput() {

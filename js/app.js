@@ -4,14 +4,18 @@ class PromptApp {
     this.generator = new PromptGenerator();
     this.historyKey = 'promptMakerHistory';
     this.maxHistory = 20;
+    this.lockedFields = new Set(); // track locked select IDs
+    this.activePreset = 'none';
     this.init();
   }
 
   init() {
     this.populateDropdowns();
+    this.populatePresetSelect();
     this.attachEventListeners();
     this._setupKeyboardShortcuts();
     this.renderAccessoriesTags();
+    this.injectLockButtons();
     this.updateOutput();
     this.renderHistory();
   }
@@ -20,9 +24,13 @@ class PromptApp {
     this.populateSelect('photo-device', SELECTOR_OPTIONS.photo.device);
     this.populateSelect('photo-lens-type', SELECTOR_OPTIONS.photo.lens_type);
     this.populateSelect('photo-custom', SELECTOR_OPTIONS.photo.custom);
-    this.populateSelect('painting-style', SELECTOR_OPTIONS.painting_drawing.style);
-    this.populateSelect('painting-colors', SELECTOR_OPTIONS.painting_drawing.colors);
-    this.populateSelect('painting-custom', SELECTOR_OPTIONS.painting_drawing.custom);
+    this.populateSelect('art-style', SELECTOR_OPTIONS.art.style);
+    this.populateSelect('art-colors', SELECTOR_OPTIONS.art.colors);
+    this.populateSelect('art-medium', SELECTOR_OPTIONS.art.medium);
+    // Design
+    this.populateSelect('design-type', SELECTOR_OPTIONS.design.type);
+    this.populateSelect('design-aesthetic', SELECTOR_OPTIONS.design.aesthetic);
+    this.updateDesignReferences();
     this.populateSelect('render-style', SELECTOR_OPTIONS.render.style);
     this.populateSelect('render-quality', SELECTOR_OPTIONS.render.quality);
     this.populateSelect('render-engine', SELECTOR_OPTIONS.render.engine);
@@ -56,6 +64,26 @@ class PromptApp {
     });
   }
 
+  updateDesignReferences() {
+    const typeSelect = document.getElementById('design-type');
+    const type = typeSelect ? typeSelect.value : '';
+    const refs = SELECTOR_OPTIONS.design.reference[type] || [];
+    this.populateSelect('design-reference', refs);
+  }
+
+  // Populate preset filter dropdown
+  populatePresetSelect() {
+    const sel = document.getElementById('random-preset');
+    if (!sel) return;
+    sel.innerHTML = '';
+    for (const [key, preset] of Object.entries(RANDOM_PRESETS)) {
+      const opt = document.createElement('option');
+      opt.value = key;
+      opt.textContent = preset.label;
+      sel.appendChild(opt);
+    }
+  }
+
   renderAccessoriesTags() {
     const container = document.getElementById('accessories-tags');
     if (!container) return;
@@ -73,6 +101,56 @@ class PromptApp {
     });
   }
 
+  // Inject lock toggle buttons next to each select & accessories
+  injectLockButtons() {
+    // Wrap each select with lock button
+    document.querySelectorAll('.input-section select').forEach(sel => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'field-lock-wrap';
+      sel.parentNode.insertBefore(wrapper, sel);
+      wrapper.appendChild(sel);
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'lock-btn';
+      btn.dataset.target = sel.id;
+      btn.title = 'Lock this field from randomization';
+      btn.textContent = '🔓';
+      btn.addEventListener('click', () => this._toggleLock(sel.id, btn));
+      wrapper.appendChild(btn);
+    });
+
+    // Lock button for accessories group
+    const accContainer = document.getElementById('accessories-tags');
+    if (accContainer) {
+      const wrap = document.createElement('div');
+      wrap.className = 'field-lock-wrap tags-lock-wrap';
+      accContainer.parentNode.insertBefore(wrap, accContainer);
+      wrap.appendChild(accContainer);
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'lock-btn';
+      btn.dataset.target = 'accessories-tags';
+      btn.title = 'Lock accessories from randomization';
+      btn.textContent = '🔓';
+      btn.addEventListener('click', () => this._toggleLock('accessories-tags', btn));
+      wrap.appendChild(btn);
+    }
+  }
+
+  _toggleLock(fieldId, btn) {
+    if (this.lockedFields.has(fieldId)) {
+      this.lockedFields.delete(fieldId);
+      btn.textContent = '🔓';
+      btn.classList.remove('locked');
+    } else {
+      this.lockedFields.add(fieldId);
+      btn.textContent = '🔒';
+      btn.classList.add('locked');
+    }
+  }
+
   attachEventListeners() {
     document.getElementById('prompt').addEventListener('input', () => this.updateOutput());
     document.getElementById('negative_prompt').addEventListener('input', () => this.updateOutput());
@@ -85,12 +163,20 @@ class PromptApp {
       radio.addEventListener('change', () => this.updateOutput());
     });
 
+    const designType = document.getElementById('design-type');
+    if (designType) {
+      designType.addEventListener('change', () => this.updateDesignReferences());
+    }
+
     document.querySelectorAll('select').forEach(select => {
       select.addEventListener('change', () => this.updateOutput());
     });
 
     document.getElementById('copy-btn').addEventListener('click', () => this.copyOutput());
     document.getElementById('random-btn').addEventListener('click', () => this.randomizeSelectors());
+    document.getElementById('random-preset').addEventListener('change', (e) => {
+      this.activePreset = e.target.value;
+    });
     document.getElementById('export-btn').addEventListener('click', () => this.exportJSON());
     document.getElementById('import-btn').addEventListener('click', () => this.importJSON());
     document.getElementById('reset-btn').addEventListener('click', () => this.resetForm());
@@ -172,12 +258,10 @@ class PromptApp {
 
   handleTypeChange() {
     const selectedType = document.querySelector('input[name="type"]:checked').value;
-    const photoSettings = document.getElementById('photo-settings');
-    const paintingSettings = document.getElementById('painting-settings');
-    const renderSettings = document.getElementById('render-settings');
-    photoSettings.classList.toggle('active', selectedType === 'photo');
-    paintingSettings.classList.toggle('active', selectedType === 'painting' || selectedType === 'drawing');
-    renderSettings.classList.toggle('active', selectedType === 'render');
+    document.getElementById('photo-settings').classList.toggle('active', selectedType === 'photo');
+    document.getElementById('art-settings').classList.toggle('active', selectedType === 'art');
+    document.getElementById('render-settings').classList.toggle('active', selectedType === 'render');
+    document.getElementById('design-settings').classList.toggle('active', selectedType === 'design');
     this.updateOutput();
   }
 
@@ -194,20 +278,46 @@ class PromptApp {
     });
   }
 
-  // Randomize visible selectors only
+  // Randomize visible selectors, respecting locks + preset exclusions
   randomizeSelectors() {
-    document.querySelectorAll('select').forEach(select => {
+    const preset = RANDOM_PRESETS[this.activePreset] || RANDOM_PRESETS.none;
+    const excludes = preset.exclude || {};
+
+    document.querySelectorAll('.input-section select').forEach(select => {
+      // Skip hidden conditional sections
       if (select.closest('.conditional-section:not(.active)')) return;
-      const options = select.options;
-      if (options.length > 1) {
-        select.selectedIndex = Math.floor(Math.random() * (options.length - 1)) + 1;
+      // Skip locked fields
+      if (this.lockedFields.has(select.id)) return;
+
+      const fieldExcludes = excludes[select.id] || [];
+      // Build valid indices (skip index 0 = placeholder)
+      const valid = [];
+      for (let i = 1; i < select.options.length; i++) {
+        if (!fieldExcludes.includes(select.options[i].value)) valid.push(i);
+      }
+      if (valid.length > 0) {
+        select.selectedIndex = valid[Math.floor(Math.random() * valid.length)];
+        if (select.id === 'design-type') {
+          this.updateDesignReferences();
+        }
       }
     });
-    document.querySelectorAll('#accessories-tags input[type="checkbox"]').forEach(cb => {
-      cb.checked = Math.random() > 0.7;
-    });
+
+    // Accessories — respect lock + preset
+    if (!this.lockedFields.has('accessories-tags')) {
+      const accExcludes = excludes['subject-accessory'] || [];
+      document.querySelectorAll('#accessories-tags input[type="checkbox"]').forEach(cb => {
+        if (accExcludes.includes(cb.value)) {
+          cb.checked = false;
+        } else {
+          cb.checked = Math.random() > 0.7;
+        }
+      });
+    }
+
     this.updateOutput();
-    this.showToast('Selectors randomized!');
+    const label = preset.label !== 'No Filter' ? ` (${preset.label})` : '';
+    this.showToast(`Randomized!${label}`);
   }
 
   // Export JSON as file download
@@ -300,10 +410,16 @@ class PromptApp {
         document.getElementById('render-quality').value = state.style.render.quality || '';
         document.getElementById('render-engine').value = state.style.render.engine || '';
       }
-      if (state.style.painting_drawing) {
-        document.getElementById('painting-style').value = state.style.painting_drawing.style || '';
-        document.getElementById('painting-colors').value = state.style.painting_drawing.colors || '';
-        document.getElementById('painting-custom').value = state.style.painting_drawing.custom || '';
+      if (state.style.art) {
+        document.getElementById('art-style').value = state.style.art.style || '';
+        document.getElementById('art-colors').value = state.style.art.colors || '';
+        document.getElementById('art-medium').value = state.style.art.medium || '';
+      }
+      if (state.style.design) {
+        document.getElementById('design-type').value = state.style.design.type || '';
+        this.updateDesignReferences();
+        document.getElementById('design-aesthetic').value = state.style.design.aesthetic || '';
+        document.getElementById('design-reference').value = state.style.design.reference || '';
       }
     }
     this.updateOutput();
@@ -318,8 +434,15 @@ class PromptApp {
       defaultRadio.checked = true;
       this.handleTypeChange();
     }
-    document.querySelectorAll('select').forEach(select => { select.selectedIndex = 0; });
+    document.querySelectorAll('.input-section select').forEach(select => { select.selectedIndex = 0; });
     document.querySelectorAll('#accessories-tags input[type="checkbox"]').forEach(cb => { cb.checked = false; });
+    // Clear all locks
+    this.lockedFields.clear();
+    document.querySelectorAll('.lock-btn.locked').forEach(btn => {
+      btn.classList.remove('locked');
+      btn.textContent = '🔓';
+    });
+    this.updateDesignReferences();
     this.updateOutput();
     this.showToast('Form reset!');
   }
