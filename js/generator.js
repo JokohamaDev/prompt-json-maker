@@ -15,66 +15,66 @@ class PromptGenerator {
   // Update form state from DOM elements
   updateState() {
     const state = {
-      prompt: document.getElementById('prompt').value,
-      negative_prompt: document.getElementById('negative_prompt').value,
+      prompt: document.getElementById('prompt')?.value || '',
+      negative_prompt: document.getElementById('negative_prompt')?.value || '',
       type: document.querySelector('input[name="type"]:checked')?.value || 'photo',
       subject: {
-        characteristic: document.getElementById('subject-characteristic').value,
-        clothes: document.getElementById('subject-clothes').value,
-        action: document.getElementById('subject-action').value,
-        top_type: document.getElementById('subject-top-type').value,
-        bottom_type: document.getElementById('subject-bottom-type').value,
+        characteristic: document.getElementById('subject-characteristic')?.value || '',
+        clothes: document.getElementById('subject-clothes')?.value || '',
+        action: document.getElementById('subject-action')?.value || '',
+        top_type: document.getElementById('subject-top-type')?.value || '',
+        bottom_type: document.getElementById('subject-bottom-type')?.value || '',
         accessories: this.getMultiSelectValues('accessories-tags'),
-        weapon: document.getElementById('subject-weapon').value,
-        hair_color: document.getElementById('subject-hair-color').value,
-        hair_style: document.getElementById('subject-hair-style').value
+        weapon: document.getElementById('subject-weapon')?.value || '',
+        hair_color: document.getElementById('subject-hair-color')?.value || '',
+        hair_style: document.getElementById('subject-hair-style')?.value || ''
       },
       environment: {
-        scene_1: document.getElementById('scene-1').value,
-        scene_2: document.getElementById('scene-2').value,
-        effect: document.getElementById('scene-effect').value,
-        photo_filter: document.getElementById('scene-photo-filter').value
+        scene_1: document.getElementById('scene-1')?.value || '',
+        scene_2: document.getElementById('scene-2')?.value || '',
+        effect: document.getElementById('scene-effect')?.value || '',
+        photo_filter: document.getElementById('scene-photo-filter')?.value || ''
       },
       view: {
-        perspective: document.getElementById('view-perspective').value,
-        distance: document.getElementById('view-distance').value
+        perspective: document.getElementById('view-perspective')?.value || '',
+        distance: document.getElementById('view-distance')?.value || ''
       },
       lighting: {
-        lighting_1: document.getElementById('lighting-1').value,
-        lighting_2: document.getElementById('lighting-2').value
+        lighting_1: document.getElementById('lighting-1')?.value || '',
+        lighting_2: document.getElementById('lighting-2')?.value || ''
       }
     };
 
     if (state.type === 'photo') {
       state.style = {
         photo: {
-          device: document.getElementById('photo-device').value,
-          lens_type: document.getElementById('photo-lens-type').value,
-          custom: document.getElementById('photo-custom').value
+          device: document.getElementById('photo-device')?.value || '',
+          lens_type: document.getElementById('photo-lens-type')?.value || '',
+          custom: document.getElementById('photo-custom')?.value || ''
         }
       };
     } else if (state.type === 'render') {
       state.style = {
         render: {
-          style: document.getElementById('render-style').value,
-          quality: document.getElementById('render-quality').value,
-          engine: document.getElementById('render-engine').value
+          style: document.getElementById('render-style')?.value || '',
+          quality: document.getElementById('render-quality')?.value || '',
+          engine: document.getElementById('render-engine')?.value || ''
         }
       };
     } else if (state.type === 'design') {
       state.style = {
         design: {
-          type: document.getElementById('design-type').value,
-          aesthetic: document.getElementById('design-aesthetic').value,
-          reference: document.getElementById('design-reference').value
+          type: document.getElementById('design-type')?.value || '',
+          aesthetic: document.getElementById('design-aesthetic')?.value || '',
+          reference: document.getElementById('design-reference')?.value || ''
         }
       };
     } else {
       state.style = {
         art: {
-          style: document.getElementById('art-style').value,
-          colors: document.getElementById('art-colors').value,
-          medium: document.getElementById('art-medium').value
+          style: document.getElementById('art-style')?.value || '',
+          colors: document.getElementById('art-colors')?.value || '',
+          medium: document.getElementById('art-medium')?.value || ''
         }
       };
     }
@@ -91,6 +91,7 @@ class PromptGenerator {
   }
 
   // Remove empty/null/"None" values from object
+  // Note: 'None' is excluded to handle placeholder values from select dropdowns
   cleanEmptyValues(obj) {
     if (obj === null || obj === undefined) return null;
     if (typeof obj !== 'object') return obj;
@@ -212,12 +213,51 @@ class PromptGenerator {
     return format === 'json' ? this.generateJSON() : this.generateNaturalLanguage();
   }
 
-  // Update output textarea
+  // Update output textarea with scramble animation
   updateOutput() {
     const output = this.getOutput();
     const textarea = document.getElementById('json-output');
     const format = document.querySelector('input[name="output-format"]:checked')?.value || 'json';
-    textarea.value = output;
     textarea.classList.toggle('text-format', format === 'text');
+
+    // Apply scramble text animation using Anime.js
+    if (typeof anime !== 'undefined') {
+      const chars = '⠁⠃⠇⡇⣇⣧⣿';
+      const duration = 200;
+      
+      // Cancel any existing animation
+      anime.remove(textarea);
+      
+      // Animate with scramble effect
+      anime({
+        targets: { progress: 0 },
+        progress: 100,
+        easing: 'easeInOutQuad',
+        duration: duration,
+        update: function(anim) {
+          const progress = anim.animations[0].progress / 100;
+          const revealLength = Math.floor(progress * output.length);
+          
+          let scrambled = '';
+          for (let i = 0; i < output.length; i++) {
+            if (i < revealLength) {
+              scrambled += output[i];
+            } else {
+              if (output[i] === ' ' || output[i] === '\n') {
+                scrambled += output[i];
+              } else {
+                scrambled += chars[Math.floor(Math.random() * chars.length)];
+              }
+            }
+          }
+          textarea.value = scrambled;
+        },
+        complete: function() {
+          textarea.value = output;
+        }
+      });
+    } else {
+      textarea.value = output;
+    }
   }
 }

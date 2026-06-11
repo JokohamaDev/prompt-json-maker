@@ -325,13 +325,16 @@ class PromptApp {
     const json = this.generator.generateJSON();
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const ts = new Date().toISOString().slice(0, 19).replace(/[T:]/g, '-');
-    a.href = url;
-    a.download = `prompt-${ts}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    this.showToast('JSON exported!');
+    try {
+      const a = document.createElement('a');
+      const ts = new Date().toISOString().slice(0, 19).replace(/[T:]/g, '-');
+      a.href = url;
+      a.download = `prompt-${ts}.json`;
+      a.click();
+      this.showToast('JSON exported!');
+    } finally {
+      URL.revokeObjectURL(url);
+    }
   }
 
   // Import JSON from file
@@ -346,9 +349,36 @@ class PromptApp {
       reader.onload = (event) => {
         try {
           const state = JSON.parse(event.target.result);
+          // Validate basic structure
+          if (!state || typeof state !== 'object') {
+            throw new Error('Invalid state structure');
+          }
+          // Validate required fields if present
+          if (state.prompt && typeof state.prompt !== 'string') {
+            throw new Error('Invalid prompt field');
+          }
+          if (state.type && !['photo', 'art', 'render', 'design'].includes(state.type)) {
+            throw new Error('Invalid type field');
+          }
+          if (state.subject && typeof state.subject !== 'object') {
+            throw new Error('Invalid subject field');
+          }
+          if (state.environment && typeof state.environment !== 'object') {
+            throw new Error('Invalid environment field');
+          }
+          if (state.view && typeof state.view !== 'object') {
+            throw new Error('Invalid view field');
+          }
+          if (state.lighting && typeof state.lighting !== 'object') {
+            throw new Error('Invalid lighting field');
+          }
+          if (state.style && typeof state.style !== 'object') {
+            throw new Error('Invalid style field');
+          }
           this.restoreState(state);
           this.showToast('JSON imported!');
-        } catch {
+        } catch (err) {
+          console.error('Import error:', err);
           this.showToast('Invalid JSON file');
         }
       };
@@ -450,8 +480,17 @@ class PromptApp {
   // --- History ---
 
   getHistory() {
-    try { return JSON.parse(localStorage.getItem(this.historyKey)) || []; }
-    catch { return []; }
+    try {
+      const item = localStorage.getItem(this.historyKey);
+      return item ? JSON.parse(item) : [];
+    } catch (e) {
+      // Handle SecurityError (e.g., Safari private browsing) and other errors
+      if (e instanceof DOMException && (e.name === 'SecurityError' || e.name === 'QuotaExceededError')) {
+        return [];
+      }
+      console.error('Error reading history:', e);
+      return [];
+    }
   }
 
   saveToHistory() {
@@ -459,7 +498,17 @@ class PromptApp {
     const history = this.getHistory();
     history.unshift({ state, name: 'Untitled', timestamp: Date.now() });
     if (history.length > this.maxHistory) history.length = this.maxHistory;
-    localStorage.setItem(this.historyKey, JSON.stringify(history));
+    try {
+      localStorage.setItem(this.historyKey, JSON.stringify(history));
+    } catch (e) {
+      if (e instanceof DOMException && (e.name === 'SecurityError' || e.name === 'QuotaExceededError')) {
+        this.showToast('Could not save history (storage unavailable)');
+        return;
+      }
+      console.error('Error saving history:', e);
+      this.showToast('Could not save history');
+      return;
+    }
     this.renderHistory();
     this.showToast('Saved to history!');
   }
@@ -467,15 +516,32 @@ class PromptApp {
   renameHistoryItem(index, newName) {
     const history = this.getHistory();
     if (history[index]) {
-      history[index].name = newName || 'Untitled';
-      localStorage.setItem(this.historyKey, JSON.stringify(history));
+      const trimmedName = newName ? newName.trim() : '';
+      history[index].name = trimmedName || 'Untitled';
+      try {
+        localStorage.setItem(this.historyKey, JSON.stringify(history));
+      } catch (e) {
+        if (e instanceof DOMException && (e.name === 'SecurityError' || e.name === 'QuotaExceededError')) {
+          console.error('Could not save renamed history item (storage unavailable)');
+          return;
+        }
+        console.error('Error saving renamed history item:', e);
+      }
     }
   }
 
   deleteHistoryItem(index) {
     const history = this.getHistory();
     history.splice(index, 1);
-    localStorage.setItem(this.historyKey, JSON.stringify(history));
+    try {
+      localStorage.setItem(this.historyKey, JSON.stringify(history));
+    } catch (e) {
+      if (e instanceof DOMException && (e.name === 'SecurityError' || e.name === 'QuotaExceededError')) {
+        console.error('Could not delete history item (storage unavailable)');
+        return;
+      }
+      console.error('Error deleting history item:', e);
+    }
     this.renderHistory();
   }
 

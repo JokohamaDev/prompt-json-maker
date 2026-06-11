@@ -1,4 +1,6 @@
-const CACHE = 'prompt-maker-v1';
+// Cache version - increment this number when updating assets to force cache refresh
+const CACHE_VERSION = '1.5.0';
+const CACHE = `prompt-maker-v${CACHE_VERSION}`;
 const ASSETS = [
   '/',
   '/index.html',
@@ -25,7 +27,20 @@ self.addEventListener('activate', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
+  // Stale-while-revalidate strategy
   e.respondWith(
-    caches.match(e.request).then((cached) => cached || fetch(e.request))
+    caches.match(e.request).then((cached) => {
+      // Serve from cache immediately if available
+      const fetchPromise = fetch(e.request).then((response) => {
+        // Update cache with fresh response
+        if (response.ok) {
+          const responseClone = response.clone();
+          caches.open(CACHE).then((cache) => cache.put(e.request, responseClone));
+        }
+        return response;
+      });
+      // Return cached version immediately, or wait for network if no cache
+      return cached || fetchPromise;
+    })
   );
 });
